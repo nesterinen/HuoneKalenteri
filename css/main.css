@@ -1,0 +1,225 @@
+/* Calendar styling */
+div[name="huone_kalenteri_css"] {
+    max-width: 80vw;
+    min-width: 800px;
+    max-height: 100vh;
+    min-height: 600px;
+    margin: 0 auto;
+}
+
+div[name="huone_kalenteri_css"] table {
+    background-color: transparent;
+    text-decoration: none;
+}
+
+div[name="huone_kalenteri_css"] .fc-day {
+    border-color: #ddd;
+}
+
+div[name="huone_kalenteri_css"] .fc-timegrid-slot {
+    background-color: transparent;
+}
+
+div[name="huone_kalenteri_css"] .fc-header-toolbar button{
+    background-color: #5baa00;
+}
+
+div[name="huone_kalenteri_css"] .fc-scrollgrid-section.fc-scrollgrid-section-header {
+    max-height: 32px;
+}
+
+div[name="huone_kalenteri_css"] .fc-scrollgrid-section.fc-scrollgrid-section-header .fc-scroller-harness {
+    max-height: 32px;
+}
+
+/* Event styling ######################################################## */
+div[name="huone_kalenteri_css"] .fc-event-title-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+div[name="huone_kalenteri_css"] .huone-event-title {
+    text-overflow: ellipsis;
+    text-align: center;
+    margin-bottom: 0.5em;
+    margin-top: 0.1em;
+}
+
+div[name="huone_kalenteri_css"] .huone-event-title h3{
+    font-weight: bold;
+    margin: 0;
+}
+
+div[name="huone_kalenteri_css"] .huone-event-title p{
+    margin: 0;
+    font-size: 0.8em;
+}
+
+
+div[name="huone_kalenteri_css"] .huone-event-content {
+    padding: 0.2em;
+    border-top: 1px solid white;
+}
+
+div[name="huone_kalenteri_css"] .huone-event-varaaja {
+    border-top: 1px solid white;
+    margin-top: 0.5em;
+    font-style: italic;
+}
+
+div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
+    display: none;
+}
+
+
+/* clickPopup styling ########################################################*/
+#clickPopup {
+    border-color: #2c3e50;
+    border-radius: 5px;
+    border-width: 2px;
+    text-align: center;
+    max-width: 14em;
+}
+
+#clickPopup button {
+    margin: 5px;
+    padding: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: 0.3s;
+
+    min-width: 30%;
+}
+
+#clickPopup #closeButton {
+    background-color: #d0d0d6;
+}
+
+#clickPopup #closeButton:hover {
+    background-color: #9e9ea3;
+}
+
+#clickPopup #deleteButton {
+    background-color: #aa1c00;
+}
+
+#clickPopup #deleteButton:hover {
+    background-color: #8a1801;
+}
+
+#clickPopup h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: dimgrey;
+}
+
+#clickPopup h2 {
+    font-style: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+#clickPopup p {
+    font-style: italic;
+}
+
+#clickPopup #popContent {
+    border-top: 1px dashed dimgray;
+    border-bottom: 1px dashed dimgray;
+    max-width: 100%;
+    max-height: 5em;
+    overflow-y: auto;
+    margin-bottom: 0.5em;
+}
+
+#clickPopup #popContent p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+/* MOVE DIALOG ######################*/
+.moveDialog {
+    border-color: #2c3e50;
+    border-radius: 5px;
+    border-width: 2px;
+    text-align: center;
+}
+
+.moveDialog button {
+    margin: 5px;
+    padding: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: 0.3s;
+    width: 40%;
+}
+
+.noButton {
+    background-color: #aa1c00;
+}
+
+.noButton:hover {
+    background-color: #8a1801;
+}
+
+.yesButton {
+    background-color: #5baa00;
+}
+
+.yesButton:hover {
+    background-color: #498701;
+}
+
+
+/* CREATEPOPUP*/
+.createPopup {
+    border-color: #2c3e50;
+    border-radius: 5px;
+    border-width: 2px;
+    /*text-align: center;*/
+}
+
+.createPopup .crPopDiv {
+    border-bottom: 1px solid #2c3e50;
+    margin-bottom: 1em;
+    display: grid;
+    grid-template-columns: 35% 65%;
+}
+
+.createPopup p {
+    margin: 0.1em;
+}
+
+.createPopup input {
+    margin-bottom: 0.3em;
+}
+
+.createPopup textarea {
+    margin-bottom: 0.3em;
+    resize: none;
+}
+
+.createPopup .btnContainer {
+    border: none;
+    display: grid;
+    grid-template-columns: auto auto;
+    margin-bottom: 0;
+}
+
+.btnContainer button {
+    margin: 5px;
+    padding: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: 0.3s;
+
+    min-width: 30%;
+}
+
+.createPopup h3 {
+    text-align: center;
+    margin-top: 0;
+}
