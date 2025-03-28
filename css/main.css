@@ -2,7 +2,8 @@
 div[name="huone_kalenteri_css"] {
     max-width: 80vw;
     min-width: 800px;
-    max-height: 100vh;
+    /*max-height: 100vh;*/
+	max-height: 702px;
     min-height: 600px;
     margin: 0 auto;
 }
