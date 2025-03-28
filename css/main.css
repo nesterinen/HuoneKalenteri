@@ -141,6 +141,7 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 
 /* MOVE DIALOG ######################*/
 .moveDialog {
+    min-width: 200px;
     border-color: #2c3e50;
     border-radius: 5px;
     border-width: 2px;
