@@ -282,9 +282,9 @@ async function createPopup(startTime, endTime) {
             </div>
             <div class='crPopDiv'>
                 <p>kello</p>
-                <div>
+                <div class='crClock'>
                     <input type='time' value='${start}' class='kloStart'/>
-                    -
+                    <p>-</p>
                     <input type='time' value='${end}' class='kloEnd'/>
                 </div>
             </div>

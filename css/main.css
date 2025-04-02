@@ -240,7 +240,7 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
     border-bottom: 1px solid #2c3e50;
     margin-bottom: 1em;
     display: grid;
-    grid-template-columns: 35% 65%;
+    grid-template-columns: 25% 75%;
 }
 
 .createPopup p {
@@ -254,6 +254,15 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 .createPopup textarea {
     margin-bottom: 0.3em;
     resize: none;
+}
+
+.createPopup .crClock {
+    display: flex;
+}
+
+.createPopup .crClock p {
+    margin-left: 0.3em;
+    margin-right: 0.3em;
 }
 
 .createPopup .btnContainer {
