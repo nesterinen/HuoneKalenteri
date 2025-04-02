@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById(php_args.element_name)
     if(!calendarElement) return
     calendarElement.setAttribute('name', 'huone_kalenteri_css')
-    console.log('huone kalenteri loaded.', php_args.huoneet)
+    console.log('huone kalenteri loaded.')
 
     let reservations
 
@@ -220,6 +220,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
 
     calendar.render()
+
+    /*
+
+    const seriesButton = document.createElement('button')
+    seriesButton.innerHTML = 'Sarja varaus'
+    seriesButton.classList.add('varausBaseButton', 'baseFCButton') //'baseFCButton'
+    seriesButton.addEventListener('click', async () => {
+        const threeHours = 1000 * 60 * 60 * 3
+        const oneDay = 1000 * 60 * 60 * 24
+        SeriesPopup(new Date(), new Date(Date.now() + threeHours + oneDay*7)).then(value => {
+            console.log(value)
+        })
+    })
+    calendarElement.appendChild(seriesButton)
+
+    const threeHours = 1000 * 60 * 60 * 3
+    const oneDay = 1000 * 60 * 60 * 24
+     SeriesPopup(new Date(), new Date(Date.now() + threeHours + oneDay*7)).then(value => {
+        console.log(value)
+    })
+    */
 })
 
 
@@ -461,6 +482,83 @@ async function moveDialog(textContent) {
             yesButton,
             noButton
         )
+        dialog.showModal()
+    })
+}
+
+
+async function SeriesPopup(startDateObj, endDateObj) {
+    return new Promise((resolve) => {
+
+        function addDays(date, days) {
+            const result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
+      
+          function parseClock(clock) {
+            const [hours, minutes] = clock.split(':')
+            return parseInt(hours)*60 + parseInt(minutes)
+        }
+
+        // start datetime
+        const [startDate, startTime] = dateNoTimezone(startDateObj).split("T")
+        const [sYear, sMonth, sDay] = startDate.split('-')
+
+        // end datetime
+        const [endDate, endTime] = dateNoTimezone(endDateObj).split("T")
+        const [eYear, eMonth, eDay] = endDate.split('-')
+
+        const dialog = document.createElement('dialog')
+        dialog.classList.add('seriesPopup')
+        dialog.innerHTML = `
+            <h1>Sarja varaus</h1>
+            
+            <div class='dualContainer'>
+
+                <div class='dualContainerPartial'>
+                    <div class='crPopDiv'>
+                    <p>otsikko</p>
+                    <input type='text' class='otsikko'/>
+                    </div>
+                    <div class='crPopDiv'>
+                        <p>varaaja</p>
+                        <input type='text' class='varaaja'/>
+                    </div>
+                    <div class='crPopDiv'>
+                        <p>tila</p>
+                        <select class='huoneSelect'></select>
+                    </div>
+                    <div class='crPopDiv'>
+                        <p>sisältö</p>
+                        <textarea rows='5' cols='28' class='sisalto'></textarea>
+                    </div>
+                </div>
+                
+                <div class='dualContainerPartial'>
+                    <div>
+                        <p>Kello</p>
+                        <div class='popTimeSpan'>
+                        <input type='time' id='popTimeStartTime' value='08:00'/>
+                        <p>:</p>
+                        <input type='time' id='popTimeEndTime' value='10:00'/>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <button class='closeButton varausBaseButton'>peruuta</button>
+        `
+
+        const closeButton = dialog.querySelector('.closeButton')
+        closeButton.addEventListener('click', () => {
+            dialog.remove()
+            resolve(null)
+        })
+
+        document.body.appendChild(dialog)
         dialog.showModal()
     })
 }

@@ -86,6 +86,46 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
     color: black;
 }
 
+.varausBaseButton {
+    margin: 5px;
+    padding: 5px;
+
+    border: 1px solid transparent;
+    border-radius: 5px;
+    transition: 0.3s;
+    min-width: 45%;
+}
+
+.baseGreen {
+    background-color: #5baa00;
+}
+.baseGreen:hover {
+    background-color: #498701;
+}
+
+.baseRed {
+    background-color: #d12c0a;
+}
+
+.baseRed:hover {
+    background-color: #ad2307;
+}
+
+.baseFCButton {
+    background-color: #5baa00;
+    border-color: #2c3e50;
+    color: white;
+    font-size: 1.1em;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 0.4em 0.64em;
+}
+
+.baseFCButton:hover {
+    background-color: #1e2b37;
+}
+
+
 /* clickPopup styling ########################################################*/
 #clickPopup {
     border-color: #2c3e50;
@@ -241,4 +281,15 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 
 .createPopup select {
     margin-bottom: 0.3em;
+}
+
+/*SeriesPopup styling*/
+.dualContainer {
+    display: flex;
+    grid-template-columns: 50% 50%;
+}
+
+.dualContainer .dualContainerPartial {
+    outline: 1px solid coral;
+    text-align: center;
 }
