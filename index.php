@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TilaKalenteri
  * Description: Kalenteri huoneiden varaamista varten.
- * Version: 1.0.2
+ * Version: 1.0.3
  * Author: Aleksei Nesterinen
  * Author URI: https://github.com/nesterinen
  * Plugin URI: https://codeload.github.com/nesterinen/HuoneKalenteri/zip/refs/heads/main
