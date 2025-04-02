@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById(php_args.element_name)
     if(!calendarElement) return
     calendarElement.setAttribute('name', 'huone_kalenteri_css')
-    console.log('huone kalenteri loaded.')
+    console.log('huone kalenteri loaded.', php_args.huoneet)
 
     let reservations
 
@@ -267,7 +267,7 @@ async function createPopup(startTime, endTime) {
             </div>
             <div class='crPopDiv'>
                 <p>tila</p>
-                <input type='text' value='Neuvotteluhuone' class='tila'/>
+                <select class='huoneSelect'></select>
             </div>
             <div class='crPopDiv'>
                 <p>sisältö</p>
@@ -279,6 +279,7 @@ async function createPopup(startTime, endTime) {
             </div>
 
         `
+        // <input type='text' value='Neuvotteluhuone' class='tila'/>
 
         const cancelButton = dialog.querySelector('.cancelButton')
         cancelButton.addEventListener('click', () => {
@@ -286,12 +287,21 @@ async function createPopup(startTime, endTime) {
             resolve(null)
         })
 
+        const huoneSelector = dialog.querySelector('.huoneSelect')
+        for (const [room, color] of Object.entries(php_args.huoneet)){
+            const selectElement = document.createElement('option')
+            selectElement.appendChild(
+                document.createTextNode(room)
+            )
+            huoneSelector.appendChild(selectElement)
+        }
+
 
         const yesButton = dialog.querySelector('.yesButton')
         yesButton.addEventListener('click', () => {
             const otsikko = dialog.querySelector('.otsikko')
             const varaaja = dialog.querySelector('.varaaja')
-            const tila = dialog.querySelector('.tila')
+            //const tila = dialog.querySelector('.tila')
             const sisalto = dialog.querySelector('.sisalto')
             const alku = dialog.querySelector('.kloStart')
             const loppu = dialog.querySelector('.kloEnd')
@@ -313,13 +323,13 @@ async function createPopup(startTime, endTime) {
             loppuDate.setSeconds(0)
 
             const sisaltoFixed = sisalto.value ? sisalto.value.replaceAll('\n', ' ') : null
-            const tilaFixed = tila.value ? tila.value : null
+            //const tilaFixed = tila.value ? tila.value : null
 
             dialog.remove()
             resolve({
                 otsikko: otsikko.value,
                 varaaja: varaaja.value,
-                tila: tilaFixed,
+                tila: huoneSelector.value,
                 sisalto: sisaltoFixed,
                 alkuDate,
                 loppuDate

@@ -21,6 +21,12 @@ $huone_table_name = 'huone_kalenteri';
 global $huone_element_name;
 $huone_element_name = 'huoneElement';
 
+global $huone_available_rooms;
+$huone_available_rooms = [
+    'Neuvotteluhuone' => '#5baa00',
+    'Olohuone' => '#5baa00'
+];
+
 function huone_kalenteri_plugin_activation(): void{
     global $wpdb;
     $wp_table_name = get_huone_table_name();
@@ -93,6 +99,7 @@ function get_huone_table_name(): string {
 function load_huone_kalenteri():void {
     global $huone_element_name;
     global $huone_page_name;
+    global $huone_available_rooms;
 
     if(!is_page($huone_page_name)){
         return;
@@ -124,7 +131,8 @@ function load_huone_kalenteri():void {
         object_name: 'php_args', 
         l10n: [
             'ajax_url' => admin_url( path: 'admin-ajax.php' ),
-            'element_name' => $huone_element_name
+            'element_name' => $huone_element_name,
+            'huoneet' => $huone_available_rooms
         ]
     );
 }
