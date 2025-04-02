@@ -1,11 +1,14 @@
 /* Calendar styling */
+.blog-section .container{
+    min-width: 80vw;
+}
+
 div[name="huone_kalenteri_css"] {
-    max-width: 80vw;
-    min-width: 800px;
-    /*max-height: 100vh;*/
-	max-height: 702px;
-    min-height: 600px;
-    margin: 0 auto;
+    max-height: 67em;
+}
+
+div[name="huone_kalenteri_css"] .fc-timegrid-slots table tbody tr{
+    height: 2.5em;
 }
 
 div[name="huone_kalenteri_css"] table {
@@ -66,12 +69,22 @@ div[name="huone_kalenteri_css"] .huone-event-varaaja {
     border-top: 1px solid white;
     margin-top: 0.5em;
     font-style: italic;
+    font-size: 1.3em;
+    text-decoration: underline;
 }
 
 div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
     display: none;
 }
 
+/* Base Styles */
+.hkBaseText {
+    color: white;
+}
+
+.hkMinorText {
+    color: black;
+}
 
 /* clickPopup styling ########################################################*/
 #clickPopup {
@@ -224,4 +237,8 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 .createPopup h3 {
     text-align: center;
     margin-top: 0;
+}
+
+.createPopup select {
+    margin-bottom: 0.3em;
 }

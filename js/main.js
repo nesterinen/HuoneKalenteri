@@ -186,10 +186,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const hText = document.createElement('h3')
                 hText.textContent = event.event._def.title
+                hText.classList.add('hkBaseText')
                 title.appendChild(hText)
 
                 if (event.event._def.extendedProps.room) {
                     const pText = document.createElement('p')
+                    pText.classList.add('hkMinorText')
                     pText.textContent = event.event._def.extendedProps.room
                     title.appendChild(pText)
                 }
