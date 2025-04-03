@@ -294,12 +294,55 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 }
 
 /*SeriesPopup styling*/
+.seriesPopup h1 {
+    text-align: center;
+}
+
 .dualContainer {
     display: flex;
     grid-template-columns: 50% 50%;
 }
 
-.dualContainer .dualContainerPartial {
-    outline: 1px solid coral;
+.dualContainerPartial {
+    /*outline: 1px solid coral;*/
     text-align: center;
+    padding-right: 1em;
+}
+
+.dualContainerPartialB {
+    border-left:  1px solid #2c3e50;;   
+    padding-left: 1em;
+    text-align: center;
+}
+
+.dualContainer .crPopDiv {
+    /*border-bottom: 1px solid #2c3e50;*/
+    margin-bottom: 1em;
+    display: grid;
+    grid-template-columns: 25% 75%;
+}
+
+.crRightDiv {
+    display: flex;
+}
+
+.popTimeSpan {
+    display: grid;
+    grid-template-columns: 45% 10% 45%;
+    margin-bottom: 1em;
+}
+
+.popDaySelect {
+    display: flex;
+    margin-bottom: 1em;
+}
+
+.popDaySelect div {
+    margin: auto;
+    border-bottom: 1px solid #2c3e50;
+}
+
+.crButtonContainer {
+    display: grid;
+    grid-template-columns: 50% 50%;
 }

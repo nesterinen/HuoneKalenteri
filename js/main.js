@@ -222,7 +222,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendar.render()
 
     /*
-
     const seriesButton = document.createElement('button')
     seriesButton.innerHTML = 'Sarja varaus'
     seriesButton.classList.add('varausBaseButton', 'baseFCButton') //'baseFCButton'
@@ -517,39 +516,81 @@ async function SeriesPopup(startDateObj, endDateObj) {
             <div class='dualContainer'>
 
                 <div class='dualContainerPartial'>
+
                     <div class='crPopDiv'>
-                    <p>otsikko</p>
-                    <input type='text' class='otsikko'/>
+                        <p>otsikko</p>
+                        <input type='text' class='otsikko'/>
                     </div>
+
                     <div class='crPopDiv'>
                         <p>varaaja</p>
                         <input type='text' class='varaaja'/>
                     </div>
+
                     <div class='crPopDiv'>
                         <p>tila</p>
                         <select class='huoneSelect'></select>
                     </div>
+
                     <div class='crPopDiv'>
                         <p>sisältö</p>
                         <textarea rows='5' cols='28' class='sisalto'></textarea>
                     </div>
+
                 </div>
                 
-                <div class='dualContainerPartial'>
-                    <div>
-                        <p>Kello</p>
+                <div class='dualContainerPartialB'>
+
+                    <div class='crClock'>
+                        <p>Aikaväli</p>
                         <div class='popTimeSpan'>
-                        <input type='time' id='popTimeStartTime' value='08:00'/>
-                        <p>:</p>
-                        <input type='time' id='popTimeEndTime' value='10:00'/>
+                            <input type='date' id='popDateStartTime' value='${sYear}-${sMonth}-${sDay}'/>
+                            <p>:</p>
+                            <input type='date' id='popDateEndTime' value='${eYear}-${eMonth}-${eDay}'/>
                         </div>
                     </div>
+
+                    <div class='crClock'>
+                        <p>Kello</p>
+                        <div class='popTimeSpan'>
+                            <input type='time' id='popTimeStartTime' value='08:00'/>
+                            <p>:</p>
+                            <input type='time' id='popTimeEndTime' value='10:00'/>
+                        </div>
+                    </div>
+
+                    <div class='popDaySelect'>
+                        <div>
+                            <input type='checkbox' id='cbMa' class='cbDay'/>
+                            <label for='cbMa'>ma</label>
+                        </div>
+                        <div>
+                            <input type='checkbox' id='cbTi' class='cbDay'/>
+                            <label for='cbTi'>ti</label>
+                        </div>
+                        <div>
+                            <input type='checkbox' id='cbKe' class='cbDay'/>
+                            <label for='cbKe'>ke</label>
+                        </div>
+                        <div>
+                            <input type='checkbox' id='cbTo' class='cbDay'/>
+                            <label for='cbTo'>to</label>
+                        </div>
+                        <div>
+                            <input type='checkbox' id='cbPe' class='cbDay'/>
+                            <label for='cbPe'>pe</label>
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
 
-
-            <button class='closeButton varausBaseButton'>peruuta</button>
+            <div class='crButtonContainer'>
+                <button class='addButton varausBaseButton baseGreen'>varaa</button>
+                <button class='closeButton varausBaseButton'>peruuta</button>
+            </div>
         `
 
         const closeButton = dialog.querySelector('.closeButton')
@@ -557,6 +598,99 @@ async function SeriesPopup(startDateObj, endDateObj) {
             dialog.remove()
             resolve(null)
         })
+
+        const huoneSelector = dialog.querySelector('.huoneSelect')
+        for (const [room, color] of Object.entries(php_args.huoneet)){
+            const selectElement = document.createElement('option')
+            selectElement.appendChild(
+                document.createTextNode(room)
+            )
+            huoneSelector.appendChild(selectElement)
+        }
+
+        function isValueEmpty(element, condition){
+            if(condition) {
+                element.style = 'outline: 1px solid red;'
+                return true
+            } else {
+                element.style = 'outline: none;'
+                return false
+            }
+        }
+
+        const addButton = dialog.querySelector('.addButton')
+        addButton.addEventListener('click', () => {
+            //check title and varaaja not null
+            const title = dialog.querySelector('.otsikko')
+            const varaajaElement = dialog.querySelector('.varaaja')
+
+            const startClock = dialog.querySelector('#popTimeStartTime').value
+            const startDateText = `${dialog.querySelector('#popDateStartTime').value}T${startClock}:00`
+            const startDateInput = new Date(startDateText)
+
+            const endClock = dialog.querySelector('#popTimeEndTime').value
+            const endDateText = `${dialog.querySelector('#popDateEndTime').value}T${endClock}:00`
+            const endDateInput = new Date(endDateText)
+
+            // get day checkbox inputs and add saturday and sunday => 7days
+            const checkboxElements = dialog.getElementsByClassName('cbDay')
+            let daysChecked = []
+            for (const checkbox of checkboxElements) {
+                daysChecked.push(checkbox.checked)
+            }
+            daysChecked.push(false) // saturday
+            daysChecked.push(false) // sunday
+
+            const diffTime = startDateInput - endDateInput
+            const diffDays = Math.floor(-diffTime / (1000 * 60 * 60 * 24)) // time difference in days.
+
+            const endDateElement = dialog.querySelector('#popDateEndTime')
+            const endClockElement = dialog.querySelector('#popTimeEndTime')
+            const checkboxElementsContainer = dialog.querySelector('.popDaySelect')
+            if(
+                isValueEmpty(title, title.value === '') | 
+                isValueEmpty(varaajaElement, varaajaElement.value === '') |
+                isValueEmpty(endDateElement, diffTime >= 0 || diffDays === 0 || diffDays >= 180) |
+                isValueEmpty(endClockElement, parseClock(endClock) - parseClock(startClock) <= 0) |
+                isValueEmpty(checkboxElementsContainer, daysChecked.reduce((prev, curr) => prev + curr) === 0)
+                ) {
+                return
+            }
+            // loop through days froms start to end
+            const arrayOfDates = [] //[{start: date, endDate}, {}, ...]
+            for (let i = 0; i <= diffDays; i++){
+                const newDate = addDays(startDateInput, i)
+                if(daysChecked[ newDate.getDay() - 1 ]){
+                const newDateEnd = new Date(newDate)//addDays(endDateInput, i)
+                const [eHours, eMins] = endClock.split(':')
+                newDateEnd.setHours(parseInt(eHours))
+                newDateEnd.setMinutes(parseInt(eMins))
+                arrayOfDates.push({
+                    start: dateNoTimezone(newDate),//newDate,
+                    end: dateNoTimezone(newDateEnd)//newDateEnd
+                })
+                }
+            }
+
+            if(arrayOfDates.length === 0){
+                //dialog.remove()
+                //resolve(null)
+            }
+
+            //assign millisconds since 1970 as reservation series id
+            const varaaja = `${varaajaElement.value} ::sarja ::${new Date().valueOf()}`
+            const content = dialog.querySelector('.sisalto')
+
+            dialog.remove()
+            resolve({
+                varaaja,
+                title: title.value,
+                room: huoneSelector.value,
+                content: content.value,
+                dates: arrayOfDates
+            })
+        })
+
 
         document.body.appendChild(dialog)
         dialog.showModal()
