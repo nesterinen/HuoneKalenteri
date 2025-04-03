@@ -103,3 +103,44 @@ function huone_update_db(): void {
 }
 add_action('wp_ajax_huone_update_db', 'huone_update_db');
 add_action( 'wp_ajax_nopriv_huone_update_db', 'huone_update_db');
+
+function huone_post_db_multi(): void {
+    global $wpdb;
+    $wp_table_name = get_huone_table_name();
+
+    $values = [];
+
+    foreach ($_POST['dates'] as $key => $event) {
+        $values[] = $wpdb->prepare(
+            '(%s,%s,%s,%s,%s,%s)',
+            $_POST['title'],
+            $event['start'],
+            $event['end'],
+            $_POST['varaaja'],
+            $_POST['content'],
+            $_POST['room']
+        );
+    }
+
+    // mySQL does not support RETURNING ids like postgress does....
+    $query = "INSERT INTO {$wp_table_name} (title, start, end, varaaja, content, room) VALUES ";
+    $query .= implode(",\n", $values);
+
+    $result = $wpdb->query($query);
+
+    switch (true) {
+        case $result === false:
+            wp_send_json_error($result, 500);
+            break;
+        
+        case $result === 0:
+            wp_send_json_error($result, 400);
+            break;
+
+        case $result >= 1:
+            wp_send_json_success(array("result" => $result), 200);
+    }
+}
+
+add_action('wp_ajax_huone_post_db_multi', 'huone_post_db_multi');
+add_action( 'wp_ajax_nopriv_huone_post_db_multi', 'huone_post_db_multi');

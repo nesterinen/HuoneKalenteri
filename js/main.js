@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     calendar.render()
 
-    /*
+    
     const seriesButton = document.createElement('button')
     seriesButton.innerHTML = 'Sarja varaus'
     seriesButton.classList.add('varausBaseButton', 'baseFCButton') //'baseFCButton'
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      SeriesPopup(new Date(), new Date(Date.now() + threeHours + oneDay*7)).then(value => {
         console.log(value)
     })
-    */
+    
 })
 
 
@@ -680,13 +680,14 @@ async function SeriesPopup(startDateObj, endDateObj) {
             //assign millisconds since 1970 as reservation series id
             const varaaja = `${varaajaElement.value} ::sarja ::${new Date().valueOf()}`
             const content = dialog.querySelector('.sisalto')
+            const contentFixed = content.value ? content.value.replaceAll('\n', ' ') : null
 
             dialog.remove()
             resolve({
                 varaaja,
                 title: title.value,
                 room: huoneSelector.value,
-                content: content.value,
+                content: contentFixed,
                 dates: arrayOfDates
             })
         })
