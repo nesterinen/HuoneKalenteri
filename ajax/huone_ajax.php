@@ -147,7 +147,7 @@ add_action( 'wp_ajax_nopriv_huone_post_db_multi', 'huone_post_db_multi');
 
 function huone_delete_db_varaaja() {
     global $wpdb;
-    $wp_table_name = get_table_name();
+    $wp_table_name = get_huone_table_name();
 
     $result = $wpdb->delete($wp_table_name, array('varaaja' => $_POST['varaaja']));
   
