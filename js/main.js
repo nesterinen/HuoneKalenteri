@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (event.event._def.extendedProps.varaaja) {
                     const varaaja = document.createElement('div')
-                    varaaja.textContent = event.event._def.extendedProps.varaaja
+                    varaaja.textContent = event.event._def.extendedProps.varaaja.split('::')[0]
                     varaaja.classList.add('huone-event-varaaja')
                     //varaaja.classList.add('fc-event-title')
                     //varaaja.classList.add('fc-sticky')
@@ -229,17 +229,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         const threeHours = 1000 * 60 * 60 * 3
         const oneDay = 1000 * 60 * 60 * 24
         SeriesPopup(new Date(), new Date(Date.now() + threeHours + oneDay*7)).then(value => {
-            console.log(value)
+            if(value === null) return;
+
+            jQuery.ajax({
+                type: "post",
+                dataType: "json",
+                url: php_args.ajax_url,
+                data: {
+                    action:'huone_post_db_multi',
+                    title: value.title,
+                    varaaja: value.varaaja,
+                    room: value.room,
+                    content: value.content,
+                    dates: value.dates
+                },
+                success: function(resp){ 
+                    console.log('events added:', resp.data.result);
+                    //refetch reservations from database, filter by varaaja(reserver) and append new values to calendar events..
+                    getAllFilterByVaraaja(value.varaaja).then(result => {
+                        calendar.addEventSource(result)
+                    })
+                },
+                error: function(error){
+                    console.log('update error:', error)
+                }
+            })
         })
     })
     calendarElement.appendChild(seriesButton)
 
-    const threeHours = 1000 * 60 * 60 * 3
-    const oneDay = 1000 * 60 * 60 * 24
-     SeriesPopup(new Date(), new Date(Date.now() + threeHours + oneDay*7)).then(value => {
-        console.log(value)
-    })
-    
+    async function getAllFilterByVaraaja(varaaja) {
+        return new Promise((resolve, reject) => {
+            jQuery.ajax({
+                type: "POST",
+                dataType: "json",
+                url: php_args.ajax_url,
+                data: { action:'huone_get_all' },
+                success: function(response){
+                    const resultJSON = response.data
+                        .filter(obj => obj.varaaja === varaaja)
+                        .map(obj => {
+                            return {...obj, color:'#5baa00'}
+                        })
+
+                    resolve(resultJSON)
+                },
+                error: function(jqXHR, error, errorThrown){
+                    if(jqXHR.status&&jqXHR.status==200){
+                    reject('err', jqXHR);
+                    } else {
+                    reject(jqXHR.responseText)
+                    }
+                }
+            })
+        })
+    }
 })
 
 
@@ -673,8 +717,8 @@ async function SeriesPopup(startDateObj, endDateObj) {
             }
 
             if(arrayOfDates.length === 0){
-                //dialog.remove()
-                //resolve(null)
+                dialog.remove()
+                resolve(null)
             }
 
             //assign millisconds since 1970 as reservation series id
