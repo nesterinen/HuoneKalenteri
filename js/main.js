@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return
             }
 
-            if (clickPopupReturn.delete){
+            if (clickPopupReturn.delete && clickPopupReturn.series == false){
                 jQuery.ajax({
                     type: "post",
                     dataType: "json",
@@ -120,6 +120,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                     },
                     error: function(error){
                         console.log('deleted with error, id:', clickPopupReturn.id );
+                        console.log('delete error:', error)
+                    }
+                })
+            }
+
+            if (clickPopupReturn.delete && clickPopupReturn.series) {
+                const varaaja = arg.event._def.extendedProps.varaaja
+                
+                jQuery.ajax({
+                    type: "post",
+                    dataType: "json",
+                    url: php_args.ajax_url,
+                    data: {
+                        action:'huone_delete_db_varaaja',
+                        varaaja
+                    },
+                    success: function(){ 
+                        calendar.getEvents().forEach(eventti => {
+                            if(eventti._def.extendedProps.varaaja === varaaja) {
+                                eventti.remove()
+                            }
+                        })
+                        console.log('deleted series:', varaaja); 
+                    },
+                    error: function(error){
                         console.log('delete error:', error)
                     }
                 })
@@ -454,14 +479,15 @@ async function clickPopup(event) {
       // delete dialog button ###########################################
       var deleteButton = document.createElement('button')
       deleteButton.textContent = 'poista'
-      deleteButton.setAttribute('id', 'deleteButton')
+      //deleteButton.setAttribute('id', 'deleteButton')
+      deleteButton.classList.add('varausBaseButton', 'baseRed')
       deleteButton.addEventListener('click', () => dialogDelete())
   
       function dialogDelete() {
         closeButton.removeEventListener('click', () => dialogClose())
         deleteButton.removeEventListener('click', () => dialogDelete())
         clickDialog.remove()
-        resolve({id: event.id, delete: true, update: false})
+        resolve({id: event.id, delete: true, update: false, series: false})
       }
       // ################################################################
   
@@ -469,16 +495,31 @@ async function clickPopup(event) {
       // close dialog button ############################################
       var closeButton = document.createElement('button')
       closeButton.textContent = 'takaisin'
-      closeButton.setAttribute('id', 'closeButton')
+      //closeButton.setAttribute('id', 'closeButton')
+      closeButton.classList.add('varausBaseButton')
       closeButton.addEventListener('click', () => dialogClose())
   
       function dialogClose() {
         closeButton.removeEventListener('click', () => dialogClose())
         deleteButton.removeEventListener('click', () => dialogDelete())
         clickDialog.remove()
-        resolve({id: null, delete: false, update: false})
+        resolve({id: null, delete: false, update: false, series: false})
       }
       // ################################################################
+
+      // delete series button ###########################################
+        const varaajaSerial = event._def.extendedProps.varaaja.split('::')
+        let deleteSeriesButton = false
+        if(varaajaSerial.length > 1){
+            deleteSeriesButton = document.createElement('button')
+            deleteSeriesButton.textContent = 'poista koko sarja'
+            deleteSeriesButton.classList.add('varausBaseButton', 'baseRed')
+            deleteSeriesButton.addEventListener('click', () => {
+                clickDialog.remove()
+                resolve({id: event.id, delete: true, update: false, series: true})
+            })
+        }
+        // ################################################################
   
   
       // Finalize creating element
@@ -488,6 +529,9 @@ async function clickPopup(event) {
       clickDialog.appendChild(timeText)
       clickDialog.appendChild(endText)
       contentText(clickDialog)
+      if (deleteSeriesButton) {
+        clickDialog.appendChild(deleteSeriesButton)
+      }
       clickDialog.appendChild(deleteButton)
       clickDialog.appendChild(closeButton)
       clickDialog.showModal()
