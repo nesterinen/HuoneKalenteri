@@ -180,7 +180,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         },
 
         eventResize: async function (arg) {
-            if(await moveDialog('päivitä varaus?')){
+            const moveResult = await moveDialog('päivitä varaus?', arg.event._instance.range).catch(e => {
+                console.log('error:', e)
+                calendar.unselect()
+            })
+            if(moveResult){
                 jQuery.ajax({
                     type: "post",
                     dataType: "json",
@@ -339,6 +343,19 @@ function isValueEmpty(element, condition){
     }
 }
 
+function elevenHourLimit(startDateObj, endDateObj){
+    const diffTime = endDateObj - startDateObj
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+    const startString = dateNoTimezone(startDateObj).split('T')[1]
+    const endString = dateNoTimezone(endDateObj).split('T')[1]
+    const clockMinutes = parseClock(endString) - parseClock(startString) + (diffDays * 24 * 60)
+    if(clockMinutes <= 0 || clockMinutes > 12*60) {
+        return true
+    } else {
+        return false
+    }
+}
+
 function parseClock(clock) {
     const [hours, minutes] = clock.split(':')
     return parseInt(hours)*60 + parseInt(minutes)
@@ -389,6 +406,7 @@ async function createPopup(startTime, endTime) {
         `
         // <input type='text' value='Neuvotteluhuone' class='tila'/>
 
+        /*
         const diffTime = new Date(endTime) - new Date(startTime)
         const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
         const clockMinutes = parseClock(end) - parseClock(start) + (diffDays * 24 * 60)
@@ -398,6 +416,12 @@ async function createPopup(startTime, endTime) {
             reject(`Reservation is longer than 11h, its at: ${clockMinutes / 60}h`)
             return
         }
+        */
+       if(elevenHourLimit(new Date(startTime), new Date(endTime))){
+            dialog.remove()
+            reject(`Reservation is longer than 11h`)
+            return
+       }
 
         const cancelButton = dialog.querySelector('.cancelButton')
         cancelButton.addEventListener('click', () => {
@@ -574,8 +598,8 @@ async function clickPopup(event) {
     })
 }
 
-async function moveDialog(textContent) {
-    return new Promise((resolve) => {
+async function moveDialog(textContent, ...arguments) {
+    return new Promise((resolve, reject) => {
         // clickDialog the main element.
         const dialog = document.createElement("dialog")
         dialog.classList.add('moveDialog')
@@ -591,6 +615,18 @@ async function moveDialog(textContent) {
             dialog.remove()
             resolve(true)
         })
+
+        if(arguments.length > 0) {
+            for(const argument of arguments) {
+                if('start' in argument && 'end' in argument){
+                    if(elevenHourLimit(argument.start, argument.end)){
+                        dialog.remove()
+                        reject(`Reservation is longer than 11h`)
+                        return
+                   }
+                }
+            }
+        }
 
         const noButton = document.createElement('button')
         noButton.classList.add('noButton')
