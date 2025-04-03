@@ -62,7 +62,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const endDate = new Date(arg.end)
             if (calendar.view.type === 'dayGridMonth') { endDate.setDate(arg.end.getDate() - 1) }
 
-            const result = await createPopup(arg.start, endDate)
+            const result = await createPopup(arg.start, endDate).catch(e => {
+                console.log('error:', e)
+                calendar.unselect()
+            })
             if(result){
                 jQuery.ajax({
                     type: "POST",
@@ -326,9 +329,23 @@ function dateToJustDate(date) {
     return dateString
 }
 
+function isValueEmpty(element, condition){
+    if(condition) {
+        element.style = 'outline: 1px solid red;'
+        return true
+    } else {
+        element.style = 'outline: none;'
+        return false
+    }
+}
+
+function parseClock(clock) {
+    const [hours, minutes] = clock.split(':')
+    return parseInt(hours)*60 + parseInt(minutes)
+}
 
 async function createPopup(startTime, endTime) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const [sHours, sMinutes] = dateNoTimezone(startTime).split("T")[1].split(".")[0].split(":")  // turn dateobj to string array [0]hours [1]minutes
         const [eHours, eMinutes] = dateNoTimezone(endTime).split("T")[1].split(".")[0].split(":")  // turn dateobj to string array [0]hours [1]minutes
         const dateText = dateNoTimezone(startTime).split('T')[0]
@@ -372,6 +389,16 @@ async function createPopup(startTime, endTime) {
         `
         // <input type='text' value='Neuvotteluhuone' class='tila'/>
 
+        const diffTime = new Date(endTime) - new Date(startTime)
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24))
+        const clockMinutes = parseClock(end) - parseClock(start) + (diffDays * 24 * 60)
+        if(clockMinutes <= 0 || clockMinutes > 12*60) {
+            //console.log('Reservation time is over 11 hours limit', clockMinutes)
+            dialog.remove()
+            reject(`Reservation is longer than 11h, its at: ${clockMinutes / 60}h`)
+            return
+        }
+
         const cancelButton = dialog.querySelector('.cancelButton')
         cancelButton.addEventListener('click', () => {
             dialog.remove()
@@ -397,9 +424,11 @@ async function createPopup(startTime, endTime) {
             const alku = dialog.querySelector('.kloStart')
             const loppu = dialog.querySelector('.kloEnd')
 
+            /*
             if(!otsikko.value) otsikko.style = 'border: 2px solid red;'
             if(!varaaja.value) varaaja.style = 'border: 2px solid red;'
             if(!otsikko.value || !varaaja.value) return
+            */
 
             const alkuDate = new Date(startTime)
             const [hours, minutes] = alku.value.split(':')
@@ -412,6 +441,13 @@ async function createPopup(startTime, endTime) {
             loppuDate.setHours(hoursE)
             loppuDate.setMinutes(minutesE)
             loppuDate.setSeconds(0)
+
+            if(
+                isValueEmpty(otsikko, !otsikko.value) |
+                isValueEmpty(varaaja, !varaaja.value)
+                ){
+                return
+            }
 
             const sisaltoFixed = sisalto.value ? sisalto.value.replaceAll('\n', ' ') : null
             //const tilaFixed = tila.value ? tila.value : null
@@ -582,11 +618,6 @@ async function SeriesPopup(startDateObj, endDateObj) {
             result.setDate(result.getDate() + days);
             return result;
         }
-      
-          function parseClock(clock) {
-            const [hours, minutes] = clock.split(':')
-            return parseInt(hours)*60 + parseInt(minutes)
-        }
 
         // start datetime
         const [startDate, startTime] = dateNoTimezone(startDateObj).split("T")
@@ -696,16 +727,6 @@ async function SeriesPopup(startDateObj, endDateObj) {
             huoneSelector.appendChild(selectElement)
         }
 
-        function isValueEmpty(element, condition){
-            if(condition) {
-                element.style = 'outline: 1px solid red;'
-                return true
-            } else {
-                element.style = 'outline: none;'
-                return false
-            }
-        }
-
         const addButton = dialog.querySelector('.addButton')
         addButton.addEventListener('click', () => {
             //check title and varaaja not null
@@ -735,11 +756,12 @@ async function SeriesPopup(startDateObj, endDateObj) {
             const endDateElement = dialog.querySelector('#popDateEndTime')
             const endClockElement = dialog.querySelector('#popTimeEndTime')
             const checkboxElementsContainer = dialog.querySelector('.popDaySelect')
+            const clockMinutes = parseClock(endClock) - parseClock(startClock)
             if(
                 isValueEmpty(title, title.value === '') | 
                 isValueEmpty(varaajaElement, varaajaElement.value === '') |
                 isValueEmpty(endDateElement, diffTime >= 0 || diffDays === 0 || diffDays >= 180) |
-                isValueEmpty(endClockElement, parseClock(endClock) - parseClock(startClock) <= 0) |
+                isValueEmpty(endClockElement, clockMinutes <= 0 || clockMinutes > 12*60) |
                 isValueEmpty(checkboxElementsContainer, daysChecked.reduce((prev, curr) => prev + curr) === 0)
                 ) {
                 return
