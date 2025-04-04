@@ -101,13 +101,17 @@ function load_huone_kalenteri():void {
     global $huone_page_name;
     global $huone_available_rooms;
 
+    $plugin_data = get_plugin_data( __FILE__ );
+
     if(!is_page($huone_page_name)){
         return;
     }
 
     wp_enqueue_style(
         handle: 'wsp-styles-hk', 
-        src: plugin_dir_url(file: __FILE__) . 'css/main.css'
+        src: plugin_dir_url(file: __FILE__) . 'css/main.css',
+        deps: [],
+        ver: $plugin_data['Version']
     );
 
     wp_register_script(
@@ -123,7 +127,8 @@ function load_huone_kalenteri():void {
         deps: [
             'fullcalendar-js',
             'jquery'
-        ]
+        ],
+        ver: $plugin_data['Version']
     );
 
     wp_localize_script( 
