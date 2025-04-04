@@ -52,10 +52,9 @@ div[name="huone_kalenteri_css"] .huone-event-title {
     margin-top: 0.1em;
 }
 
-div[name="huone_kalenteri_css"] .huone-event-title h3{
+div[name="huone_kalenteri_css"] .huone-event-title div{
     /*font-weight: bold;*/
     margin: 0;
-    font-size: 1.1em;
 }
 
 div[name="huone_kalenteri_css"] .huone-event-title p{
@@ -86,10 +85,12 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 /* Base Styles */
 .hkBaseText {
     color: white;
+    font-size: 1.1em;
 }
 
 .hkMinorText {
     /*color: black;*/
+    font-size: 0.8em;
     color: white;
 }
 

@@ -220,13 +220,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const title = document.createElement('div')
                 title.classList.add('huone-event-title')
 
-                const hText = document.createElement('h3')
+                //const hText = document.createElement('h3')
+                const hText = document.createElement('div')
                 hText.textContent = event.event._def.title
                 hText.classList.add('hkBaseText')
                 title.appendChild(hText)
 
                 if (event.event._def.extendedProps.room) {
-                    const pText = document.createElement('p')
+                    //const pText = document.createElement('p')
+                    const pText = document.createElement('div')
                     pText.classList.add('hkMinorText')
                     pText.textContent = event.event._def.extendedProps.room
                     title.appendChild(pText)

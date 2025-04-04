@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TilaKalenteri
  * Description: Kalenteri huoneiden varaamista varten.
- * Version: 1.0.7
+ * Version: 1.0.8
  * Author: Aleksei Nesterinen
  * Author URI: https://github.com/nesterinen
  * Plugin URI: https://codeload.github.com/nesterinen/HuoneKalenteri/zip/refs/heads/main
@@ -112,7 +112,7 @@ function load_huone_kalenteri():void {
         handle: 'wsp-styles-hk', 
         src: plugin_dir_url(file: __FILE__) . 'css/main.css',
         deps: [],
-        ver: '1.0.7'
+        ver: '1.0.8'
     );
 
     wp_register_script(
@@ -129,7 +129,7 @@ function load_huone_kalenteri():void {
             'fullcalendar-js',
             'jquery'
         ],
-        ver: '1.0.7'
+        ver: '1.0.8'
     );
 
     wp_localize_script( 
