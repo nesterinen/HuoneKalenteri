@@ -1,10 +1,12 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById(php_args.element_name)
     if(!calendarElement) return
-    calendarElement.setAttribute('name', 'huone_kalenteri_css')
-    console.log('huone kalenteri loaded.')
 
-    console.log(php_args.huoneet)
+    //EventList(calendarElement)
+    //return
+
+    calendarElement.setAttribute('name', 'huone_kalenteri_css')
+    console.log('Tilavaraukset loaded.')
 
     let reservations
 

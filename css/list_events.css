@@ -1,0 +1,23 @@
+.EeElement{
+    border: 1px solid grey;
+    margin: 0.25em;
+    display: grid;
+    grid-template-columns: 10% 35% 25% 25%;
+}
+
+.EeElement .EeHeader{
+    color: black;
+    font-size: 1.5em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.EeElement .EeParagraph{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+.EeElement .EeDateTime{
+    text-align: center;
+    outline: 1px solid coral;
+}

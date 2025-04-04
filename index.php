@@ -103,22 +103,39 @@ function load_huone_kalenteri():void {
 
     //$plugin_data = get_plugin_data( __FILE__ );
     //$plugin_data['Version']
+    $version = '1.0.8';
 
     if(!is_page($huone_page_name)){
         return;
     }
 
+    // Styles
     wp_enqueue_style(
         handle: 'wsp-styles-hk', 
         src: plugin_dir_url(file: __FILE__) . 'css/main.css',
         deps: [],
-        ver: '1.0.8'
+        ver: $version
     );
 
+    wp_enqueue_style(
+        handle: 'wsp-styles-hk-le', 
+        src: plugin_dir_url(file: __FILE__) . 'css/list_events.css',
+        deps: [],
+        ver: $version
+    );
+
+    // Scripts
     wp_register_script(
         handle: 'fullcalendar-js',
         src: plugin_dir_url( file: __FILE__ ) . "js/fullcalendar/dist/index.global.js",
         ver: null,
+        deps: ['jquery']
+    );
+
+    wp_register_script(
+        handle: 'list-events',
+        src: plugin_dir_url(file: __FILE__) .'js/list_events.js',
+        ver: $version,
         deps: ['jquery']
     );
 
@@ -127,9 +144,10 @@ function load_huone_kalenteri():void {
         src: plugin_dir_url(file: __FILE__) .'js/main.js',
         deps: [
             'fullcalendar-js',
-            'jquery'
+            'jquery',
+            'list-events'
         ],
-        ver: '1.0.8'
+        ver: $version
     );
 
     wp_localize_script( 
