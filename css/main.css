@@ -1,4 +1,8 @@
 /* Calendar styling */
+a {
+    text-decoration: none !important; /*stop underlines*/
+}
+
 .blog-section .container{
     min-width: 80vw;
 }
@@ -13,7 +17,6 @@ div[name="huone_kalenteri_css"] .fc-timegrid-slots table tbody tr{
 
 div[name="huone_kalenteri_css"] table {
     background-color: transparent;
-    text-decoration: none;
 }
 
 div[name="huone_kalenteri_css"] .fc-day {
@@ -50,27 +53,30 @@ div[name="huone_kalenteri_css"] .huone-event-title {
 }
 
 div[name="huone_kalenteri_css"] .huone-event-title h3{
-    font-weight: bold;
+    /*font-weight: bold;*/
     margin: 0;
+    font-size: 1.1em;
 }
 
 div[name="huone_kalenteri_css"] .huone-event-title p{
     margin: 0;
-    font-size: 0.8em;
+    font-size: 0.7em;
 }
 
 
 div[name="huone_kalenteri_css"] .huone-event-content {
-    padding: 0.2em;
-    border-top: 1px solid white;
+    font-size: 0.8em;
+    /*padding: 0.2em;*/
+    /*border-top: 1px solid white;*/
 }
 
 div[name="huone_kalenteri_css"] .huone-event-varaaja {
-    border-top: 1px solid white;
-    margin-top: 0.5em;
+    /*border-top: 1px solid white;*/
+    /*margin-top: 0.5em;*/
+    font-size: 0.7em;
     font-style: italic;
-    font-size: 1.3em;
-    text-decoration: underline;
+    /*font-size: 1.3em;*/
+    /*text-decoration: underline;*/
 }
 
 div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
@@ -83,7 +89,8 @@ div[name="huone_kalenteri_css"] .fc-event-title-container .fc-event-title {
 }
 
 .hkMinorText {
-    color: black;
+    /*color: black;*/
+    color: white;
 }
 
 .varausBaseButton {

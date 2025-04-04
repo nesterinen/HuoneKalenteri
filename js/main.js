@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendarElement.setAttribute('name', 'huone_kalenteri_css')
     console.log('huone kalenteri loaded.')
 
+    console.log(php_args.huoneet)
+
     let reservations
 
     await jQuery.ajax({
@@ -13,7 +15,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         data: { action: 'huone_get_all' },
         success: function (response) {
             reservations = response.data.map(obj => {
-                return {...obj, color:'#5baa00'}
+                const color = php_args.huoneet[obj.room] ? php_args.huoneet[obj.room] : '#5baa00'
+                return {...obj, color:color}
             })
         },
         error: function(error){
@@ -54,6 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         //events: testEvents,¨
         events: reservations,
+        slotEventOverlap: false,
 
         //weekends: false,
 
@@ -301,7 +305,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const resultJSON = response.data
                         .filter(obj => obj.varaaja === varaaja)
                         .map(obj => {
-                            return {...obj, color:'#5baa00'}
+                            const color = php_args.huoneet[obj.room] ? php_args.huoneet[obj.room] : '#5baa00'
+                            return {...obj, color:color}
                         })
 
                     resolve(resultJSON)
