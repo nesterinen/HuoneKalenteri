@@ -1,46 +1,36 @@
-function eventElement(event) {
-    const eventElement = document.createElement('div')
-    //eventElement.style = 'outline: 1px solid coral;'
-    eventElement.classList.add('EeElement')
-    let [dateText, startTime] = event.start.split(' ')
-    let [ , endTime] = event.end.split(' ')
-
-    startTime = startTime.split(':')
-    startTime = startTime[0] + ':' + startTime[1]
-
-    endTime = endTime.split(':')
-    endTime = endTime[0] + ':' + endTime[1]
-
-    eventElement.innerHTML = `
-        <div class='EeDateTime'>
-            <div class='EeParagraph'>${dateText}</div>
-            <div class='EeParagraph'>${startTime}-${endTime}</div>
-        </div>
-
-        <div class='EeHeader'>${event.title}</div>
-        <div class='EeParagraph'>${event.varaaja.split('::')[0]}</div>
-        <div class='EeParagraph'>${event.room}</div>
-    `
-    return eventElement
-}
-
 class RoomContainer {
     constructor(room, color){
         this.room = room
         this.color = color
+        this.startDate = new Date()
+        this.endDate = new Date(new Date(this.startDate).setMonth(this.startDate.getMonth() + 3))
         this.element = this.#createElement(room, color)
         this.events = []
     }
 
     #createElement(room, color) {
         const roomElement = document.createElement('div')
+        roomElement.classList.add('EeRoomContainer')
         roomElement.innerHTML = `
-            <h1 style='text-decoration: underline; text-decoration-color: ${color}; text-decoration-thickness: 3px;'>
-                ${room}
-            </h1>
+            <div class='EeRoomHeader'>
+                <h1 style='text-decoration: underline; text-decoration-color: ${color}; text-decoration-thickness: 3px;'>
+                    ${room}
+                </h1>
+                <div class='EeRoomHeaderDate'>
+                    <div>
+                        ${this.startDate.toISOString().split('T')[0].replaceAll('-', '.')}
+                    </div>
+                    <div>-</div>
+                    <div>
+                        ${this.endDate.toISOString().split('T')[0].replaceAll('-', '.')}
+                    </div>
+                </div>
+            </div>
+
             <div class='${room}'>
             </div>
         `
+        
         return roomElement
     }
 
@@ -61,7 +51,7 @@ class RoomContainer {
     
         eventElement.innerHTML = `
             <div class='EeDateTime'>
-                <div class='EeParagraph'>${dateText}</div>
+                <div class='EeParagraph'>${dateText.replaceAll('-', '.')}</div>
                 <div class='EeParagraph'>${startTime}-${endTime}</div>
             </div>
     
@@ -75,7 +65,12 @@ class RoomContainer {
     renderEvents() {
         const roomContainer = this.element.querySelector('.'+this.room)
         roomContainer.innerHTML = ''
+        const oneDayMs = 1000*60*60*20 //20hours
         this.events.forEach((event) => {
+            // filter dates by endDate + 20hours
+            if(new Date(event.end) - this.endDate >= oneDayMs){
+                return
+            } 
             roomContainer.appendChild(this.#eventElement(event))
         })
     }
@@ -120,8 +115,14 @@ async function EventList(parentElement){
         },
         error: function(error){
             console.log('get all error:', error)
+            reservations = null
         }
     })
+
+    if(!reservations) {
+        console.log('database connection error...')
+        return
+    }
 
     // filter old events
     reservations = reservations.filter(event => 
