@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById(php_args.element_name)
     if(!calendarElement) return
 
-    //EventList(calendarElement)
-    //return
+    EventList(calendarElement)
+    return
 
     calendarElement.setAttribute('name', 'huone_kalenteri_css')
     console.log('Tilavaraukset loaded.')
