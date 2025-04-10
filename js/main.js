@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const link = document.createElement('a')
     link.href = php_args.link_to_list
-    link.textContent = 'Tilavaraus lista'
+    link.textContent = 'Varaus lista'
+    link.style = 'font-size: 1.25em; text-decoration: underline !important;'
     calendarElement.parentElement.appendChild(link)
 
     calendarElement.setAttribute('name', 'huone_kalenteri_css')

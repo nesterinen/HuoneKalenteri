@@ -3,9 +3,10 @@ class RoomContainer {
         this.room = room
         this.color = color
         this.startDate = new Date()
-        this.endDate = new Date(new Date(this.startDate).setMonth(this.startDate.getMonth() + 3))
+        this.endDate = new Date(new Date(this.startDate).setMonth(this.startDate.getMonth() + 2))
         this.element = this.#createElement(room, color)
         this.events = []
+        this.reservationCount = 0
     }
 
     #createElement(room, color) {
@@ -26,6 +27,9 @@ class RoomContainer {
                     <div>-</div>
                     <div>
                         <input type='date' value='${endDateStr}' class='endDateInput'/>
+                    </div>
+                    <div class='reservationCount'>
+                        jakson varaus määrä..
                     </div>
                 </div>
             </div>
@@ -78,6 +82,7 @@ class RoomContainer {
     }
 
     renderEvents() {
+        this.reservationCount = 0
         const roomContainer = this.element.querySelector('.'+this.room)
         roomContainer.innerHTML = ''
         const oneDayMs = 1000*60*60*20 //20hours
@@ -87,7 +92,10 @@ class RoomContainer {
                 return
             } 
             roomContainer.appendChild(this.#eventElement(event))
+            this.reservationCount++;
         })
+
+        this.element.querySelector('.reservationCount').innerHTML = `jakson varaus määrä: ${this.reservationCount}`
     }
 
     addEvent(event) {
@@ -169,12 +177,18 @@ async function EventList(parentElement){
 document.addEventListener('DOMContentLoaded', async () => {
     const calendarListElement = document.getElementById(php_args.element_name)
     if(!calendarListElement) return
+
+    console.log('Tilavaraus lista loaded.')
     
     const link = document.createElement('a')
     link.href = php_args.link_to_main
-    link.textContent = 'Tilavaraukset'
+    link.textContent = 'Tilavaraus kalenteri'
     calendarListElement.appendChild(link)
 
+    await EventList(calendarListElement)
 
-    EventList(calendarListElement)
+    const blink = document.createElement('a')
+    blink.href = php_args.link_to_main
+    blink.textContent = 'Tilavaraus kalenteri'
+    calendarListElement.appendChild(blink)
 })

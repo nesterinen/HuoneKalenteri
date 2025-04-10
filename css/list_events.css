@@ -1,5 +1,6 @@
 .EeRoomContainer {
-    margin-bottom: 5em;
+    margin-top: 2.5em;
+    margin-bottom: 2.5em;
     border: 1px solid black;
 }
 
@@ -47,8 +48,8 @@
 }
 
 .EeRoomHeaderDate div {
-    padding-left: 0.15em;
-    padding-right: 0.15em;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
     margin-top: auto;
     margin-bottom: auto;
 }
