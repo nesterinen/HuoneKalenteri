@@ -1,0 +1,6 @@
+const dt = new Date('2025-11-2')
+console.log('date:', dt)
+const dt3m = new Date(dt)
+dt3m.setMonth(14)
+console.log('date2:', dt3m)
+//this.endDate = new Date(new Date(this.startDate).setMonth(this.startDate.getMonth() + 3))

@@ -9,6 +9,9 @@ class RoomContainer {
     }
 
     #createElement(room, color) {
+        const startDateStr = this.startDate.toISOString().split('T')[0]
+        const endDateStr = this.endDate.toISOString().split('T')[0]
+
         const roomElement = document.createElement('div')
         roomElement.classList.add('EeRoomContainer')
         roomElement.innerHTML = `
@@ -18,11 +21,11 @@ class RoomContainer {
                 </h1>
                 <div class='EeRoomHeaderDate'>
                     <div>
-                        ${this.startDate.toISOString().split('T')[0].replaceAll('-', '.')}
+                        <input type='date' value='${startDateStr}' disabled>
                     </div>
                     <div>-</div>
                     <div>
-                        ${this.endDate.toISOString().split('T')[0].replaceAll('-', '.')}
+                        <input type='date' value='${endDateStr}' class='endDateInput'/>
                     </div>
                 </div>
             </div>
@@ -30,7 +33,19 @@ class RoomContainer {
             <div class='${room}'>
             </div>
         `
-        
+
+        const endDateInput = roomElement.querySelector('.endDateInput')
+        endDateInput.addEventListener('input', (event) => {
+            const newEndDate = new Date(event.target.value)
+            if(newEndDate - this.startDate >= 0) {
+                this.endDate = newEndDate
+                this.renderEvents()
+                endDateInput.style = 'outline: none;'
+            } else {
+                endDateInput.style = 'outline: 1px solid red;'
+            }
+        })
+
         return roomElement
     }
 
