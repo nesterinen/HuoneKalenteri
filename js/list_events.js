@@ -164,3 +164,17 @@ async function EventList(parentElement){
 
     parentElement.appendChild(container)
 }
+
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const calendarListElement = document.getElementById(php_args.element_name)
+    if(!calendarListElement) return
+    
+    const link = document.createElement('a')
+    link.href = php_args.link_to_main
+    link.textContent = 'Tilavaraukset'
+    calendarListElement.appendChild(link)
+
+
+    EventList(calendarListElement)
+})

@@ -88,6 +88,48 @@ function huone_kalenteri_create_page(): void {
 register_activation_hook(__FILE__, 'huone_kalenteri_create_page');
 
 
+function huone_kalenteri_lista_create_page(): void {
+    global $huone_page_name;
+    global $huone_element_name;
+
+    $list_page_name = "{$huone_page_name}_lista";
+    $list_element_name = "{$huone_element_name}_lista";
+
+    $query = new WP_Query(
+        [
+            'post_type'              => 'page',
+            'title'                  => $list_page_name,
+            'post_status'            => 'all',
+            'posts_per_page'         => 1,
+            'no_found_rows'          => true,
+            'ignore_sticky_posts'    => true,
+            'update_post_term_cache' => false,
+            'update_post_meta_cache' => false,
+            'orderby'                => 'post_date ID',
+            'order'                  => 'ASC',
+        ]
+    );
+
+    if ( ! empty( $query->post)) { 
+        //write_log('page exists already');
+        return;
+    }
+
+    $page_content = "<div id='{$list_element_name}'></div>";
+    
+    $kalenteri_list_page = [
+        'post_title' => wp_strip_all_tags($list_page_name),
+        'post_content' => $page_content,
+        'post_status' => 'publish',
+        'post_author' => 1,
+        'post_type' => 'page'
+    ];
+    
+    wp_insert_post($kalenteri_list_page);
+}
+register_activation_hook(__FILE__, 'huone_kalenteri_lista_create_page');
+
+
 function get_huone_table_name(): string {
     global $wpdb;
     global $huone_table_name;
@@ -109,17 +151,13 @@ function load_huone_kalenteri():void {
         return;
     }
 
+    $list_page_name = "{$huone_page_name}_lista";
+    $link_to_list = get_bloginfo('url') . '/'. $list_page_name;
+
     // Styles
     wp_enqueue_style(
         handle: 'wsp-styles-hk', 
         src: plugin_dir_url(file: __FILE__) . 'css/main.css',
-        deps: [],
-        ver: $version
-    );
-
-    wp_enqueue_style(
-        handle: 'wsp-styles-hk-le', 
-        src: plugin_dir_url(file: __FILE__) . 'css/list_events.css',
         deps: [],
         ver: $version
     );
@@ -132,20 +170,12 @@ function load_huone_kalenteri():void {
         deps: ['jquery']
     );
 
-    wp_register_script(
-        handle: 'list-events',
-        src: plugin_dir_url(file: __FILE__) .'js/list_events.js',
-        ver: $version,
-        deps: ['jquery']
-    );
-
     wp_enqueue_script( 
         handle: 'main-script',
         src: plugin_dir_url(file: __FILE__) .'js/main.js',
         deps: [
             'fullcalendar-js',
             'jquery',
-            'list-events'
         ],
         ver: $version
     );
@@ -156,7 +186,8 @@ function load_huone_kalenteri():void {
         l10n: [
             'ajax_url' => admin_url( path: 'admin-ajax.php' ),
             'element_name' => $huone_element_name,
-            'huoneet' => $huone_available_rooms
+            'huoneet' => $huone_available_rooms,
+            'link_to_list' => $link_to_list
         ]
     );
 }
@@ -164,6 +195,66 @@ function load_huone_kalenteri():void {
 add_action(
     hook_name: 'wp_enqueue_scripts',
     callback: 'load_huone_kalenteri'
+);
+
+function load_huone_kalenteri_list():void {
+    global $huone_element_name;
+    global $huone_page_name;
+    global $huone_available_rooms;
+
+    $list_page_name = "{$huone_page_name}_lista";
+    $list_element_name = "{$huone_element_name}_lista";
+    
+    $version = '1.0.8';
+    
+    if(!is_page($list_page_name)){
+        return;
+    }
+
+    $link_to_main = get_bloginfo('url') . '/'. $huone_page_name;
+
+    // Styles
+    wp_enqueue_style(
+        handle: 'wsp-styles-hk-le', 
+        src: plugin_dir_url(file: __FILE__) . 'css/list_events.css',
+        deps: [],
+        ver: $version
+    );
+
+    // Scripts
+    wp_enqueue_script( 
+        handle: 'main-lista-script',
+        src: plugin_dir_url(file: __FILE__) .'js/list_events.js',
+        deps: [
+            'jquery',
+        ],
+        ver: $version
+    );
+
+    wp_localize_script( 
+        handle: 'main-lista-script',
+        object_name: 'php_args', 
+        l10n: [
+            'ajax_url' => admin_url( path: 'admin-ajax.php' ),
+            'element_name' => $list_element_name,
+            'huoneet' => $huone_available_rooms,
+            'link_to_main' => $link_to_main
+        ]
+    );
+
+    /*
+    wp_register_script(
+        handle: 'list-events',
+        src: plugin_dir_url(file: __FILE__) .'js/list_events.js',
+        ver: $version,
+        deps: ['jquery']
+    );
+    */
+}
+
+add_action(
+    hook_name: 'wp_enqueue_scripts',
+    callback: 'load_huone_kalenteri_list'
 );
 
 include plugin_dir_path(__FILE__) . 'ajax/huone_ajax.php';

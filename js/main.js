@@ -1,12 +1,15 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById(php_args.element_name)
     if(!calendarElement) return
-
-    //EventList(calendarElement)
-    //return
+    
+    const link = document.createElement('a')
+    link.href = php_args.link_to_list
+    link.textContent = 'Tilavaraus lista'
+    calendarElement.parentElement.appendChild(link)
 
     calendarElement.setAttribute('name', 'huone_kalenteri_css')
     console.log('Tilavaraukset loaded.')
+
 
     let reservations
 
