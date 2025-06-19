@@ -24,7 +24,7 @@ $huone_element_name = 'huoneElement';
 global $huone_available_rooms;
 $huone_available_rooms = [
     'Neuvotteluhuone' => '#5baa00',
-    'Olohuone' => '#0284c9'//'#3788d8'
+    'Olohuone' => '#0284c9'
 ];
 
 function huone_kalenteri_plugin_activation(): void{
